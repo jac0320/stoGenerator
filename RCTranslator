@@ -1,0 +1,51 @@
+import main;
+
+class RCDictionary(interface):
+    def __init__(self):
+        self.rows = {};
+        self.cols = {};
+
+    def _collect_dictionary(self, pfLength, rcPath, pName):
+        # Open Rol File
+        rowF = open(rcPath+pName+'.row', 'r');
+        counter = 1;
+        for line in rowF:
+            line = line.rstrip('\r\n');
+            #ripLine = line.split('[');
+            #line = ripLine[0];
+            strFormat = '{0:0'+str(pfLength)+'}';
+            numberStr = strFormat.format(counter);
+            self.cols["R"+str(numberStr)] = line;
+            counter += 1;
+        # Open Col File
+        colF = open(rcPath+pName+'.col', 'r');
+        counter = 1;
+        for line in colF:
+            line = line.rstrip('\r\n');
+            #ripLine = line.split('[');
+            #line = ripLine[0];
+            strFormat = '{0:0'+str(pfLength)+'}';
+            numberStr = strFormat.format(counter);
+            self.rows["C"+str(numberStr)] = line;
+            counter += 1;
+        # Close row/col Files
+        rowF.close()
+        colF.close()
+        pass
+
+    def mps_translator(self, rcPath, pfLength, mpsPath, pName):
+        counter = 1;
+        self._collect_dictionary(pfLength,rcPath,pName);
+        mpsF = open(str(mpsPath)+str(pName)+'.mps','r');
+        newMpsF = open(str(mpsPath)+str(pName)+'_Tranlsated.mps','w');
+        for line in mpsF:
+            for key in self.rows:
+                line = line.replace(key, self.rows[key]);
+            for key in self.cols:
+                line = line.replace(key, self.cols[key]);
+            newMpsF.write(line);
+            print "Line ", counter, " Fixed..."
+            counter += 1;
+        mpsF.close()
+        newMpsF.close()
+        pass
