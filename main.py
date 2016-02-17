@@ -37,7 +37,7 @@ class interface(object):
         self.mpsPath = "/Users/jac0320/GitHub/stoGenerator/";
         self.outputPath = "/Users/jac0320/GitHub/stoGenerator/";
         self.refPath = "/Users/jac0320/GitHub/stoGenerator/ExampleWorkbook.xlsx";
-        self.pName = "stoGTester";
+        self.pName = "rts96EDArea1";
 
     def initialize(self):
         print "Welcome!";
@@ -108,7 +108,7 @@ class StoGenerator(interface):
                 temp = [];
                 for j in range(1,self.rowsTotal+1):
                     temp.append(indicator_sheet.cell(i,j+1).value);
-                self.blockRowValue[self.blockName[i]] = temp;
+                self.blockRowValue[i] = temp;
         pass
 
     def _write_discrete_sto_file(self):
@@ -144,13 +144,13 @@ class StoGenerator(interface):
         # Write Block Sections
         for i in range(1,self.blockTotal+1):
             stoF.write(' BL '+str(self.blockName[i])+'    PERIOD03        '+str(self.blockProbs[i-1])+'\n');
-            for j in range(1,self.rowsTotal):
+            for j in range(1,self.rowsTotal+1):
                 utility.write_space(stoF,5);
                 stoF.write('RHS');
                 utility.write_space(stoF,9);
                 stoF.write(str(self.blockRowName[j]));
                 utility.write_space(stoF,11);
-                stoF.write(str(self.blockRowValue[self.blockName[i]][j]));
+                stoF.write(str(self.blockRowValue[i][j-1]));
                 stoF.write('\n');
         stoF.write('ENDATA');
 
